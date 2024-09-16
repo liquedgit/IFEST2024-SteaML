@@ -1,6 +1,5 @@
 import { BaseResponseDTO } from "@/interfaces/BaseResponseDTO";
 import { ErrorResponseDTO } from "@/interfaces/ErrorResponseDTO";
-import { LoginRequestDTO } from "@/interfaces/LoginRequestDTO";
 import { LoginResponseDTO } from "@/interfaces/LoginResponseDTO";
 import { SignJwt } from "@/lib/jwt";
 import { GetUserByWhere } from "@/service/user.service";
@@ -8,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req : NextRequest){
     try{
-        const loginPayload : LoginRequestDTO = await req.json() as LoginRequestDTO
+        const loginPayload = await req.json() 
     
         const user = await GetUserByWhere(loginPayload)
         if(!user){

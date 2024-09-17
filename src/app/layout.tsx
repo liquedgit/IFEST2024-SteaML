@@ -1,4 +1,6 @@
 import "./globals.css";
+import Providers from "./providers";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function RootLayout({
   children,
@@ -7,7 +9,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+        <Toaster />
+      </body>
     </html>
   );
 }

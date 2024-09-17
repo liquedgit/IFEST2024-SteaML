@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,13 +8,41 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { GithubIcon, TwitterIcon } from "lucide-react";
-import Link from "next/link";
+import useLogin from "@/composable/Auth/mutation/useLogin";
+import { toast, useToast } from "@/hooks/use-toast";
+import { LoginRequestDTO } from "@/service/client/Auth/login.post";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { z } from "zod";
 
 export default function LoginPage() {
+  const { data, error, mutate } = useLogin();
+  const [loginRequest, setLoginRequest] = useState<LoginRequestDTO>({
+    password: "",
+    username: "",
+  });
+  const router = useRouter();
+
+  useEffect(() => {
+    if (error && error.response) {
+      console.log(error.response.data);
+      toast({
+        title: "Error",
+        description: error.response.data.data.message.join(". "),
+      });
+    }
+    if (data) {
+      localStorage.setItem("jwt", data.data.accessToken);
+      toast({
+        title: "Success",
+        description: "Successfully logged in to your account",
+      });
+      router.push("/");
+    }
+  }, [data, error]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
       <Card className="w-full max-w-md bg-gray-800 text-gray-100">
@@ -33,6 +62,12 @@ export default function LoginPage() {
               placeholder="Enter your Steam account name"
               required
               className="bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
+              onChange={(e) =>
+                setLoginRequest((prev) => ({
+                  ...prev,
+                  username: e.target.value,
+                }))
+              }
             />
           </div>
           <div className="space-y-2">
@@ -43,11 +78,22 @@ export default function LoginPage() {
               placeholder="Enter your password"
               required
               className="bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
+              onChange={(e) =>
+                setLoginRequest((prev) => ({
+                  ...prev,
+                  password: e.target.value,
+                }))
+              }
             />
           </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
-          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+          <Button
+            onClick={() => {
+              mutate(loginRequest);
+            }}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+          >
             Sign in
           </Button>
         </CardFooter>

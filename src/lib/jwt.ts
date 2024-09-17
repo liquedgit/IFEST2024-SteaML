@@ -1,6 +1,6 @@
 import { SignJWT, jwtVerify, JWTPayload } from "jose";
 
-export interface JwtPayload{
+export interface JwtPayload extends JWTPayload{
     id : string,
 }
 
@@ -19,11 +19,11 @@ export async function SignJwt(payload : JwtPayload) : Promise<string | null>{
     }
 }
 
-export async function VerifyJwt(token : string) : Promise<JWTPayload | null>{
+export async function VerifyJwt(token : string) : Promise<JwtPayload | null>{
     try{
         const {payload } = await jwtVerify(token, new TextEncoder().encode(SECRET))
 
-        return payload
+        return payload as JwtPayload
     }catch(error){
         console.log("Error occured while verify JWT ", error)
         return null

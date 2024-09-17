@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const { data, error } = useMe();
+  const { data } = useMe();
   const [user, setUser] = useState<MeResponse | null>(null);
   useEffect(() => {
     if (data) {

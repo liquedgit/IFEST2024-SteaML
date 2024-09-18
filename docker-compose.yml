@@ -6,12 +6,12 @@ services:
     image: steaml
     entrypoint: ["/bin/sh", "/app/startup.sh"]
     environment:
-      - DATABASE_URL=mysql://root:root@steamldb:3306/steaml
+      - DATABASE_URL=mysql://root:r00tp455w0rd@steamldb:3306/steaml
       - JWT_SECRET=SECRET
       - ADMIN_PASSWORD=administrator_password
       - FLAG=IFEST{f4k3_f146}
     ports:
-      - 3000:3000
+      - 3221:3000
     depends_on:
       steamldb:
         condition: service_healthy
